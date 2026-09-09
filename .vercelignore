@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.runtime/
+.git/
+.vercel/
+dev/
+references/
+supabase/
+tests/
+*.zip

@@ -1,0 +1,46 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {CAMERA_PROFILES,getCameraProfile} from '../cameraProfiles/index.js';
+import {createState,clone} from '../model.js';
+import {renderFilm} from '../filmEngine/index.js';
+import {toneResponse} from '../filmEngine/tone/index.js';
+import {exposureEV,analyzeScene} from '../filmEngine/exposure/index.js';
+import {opticalField,applyLens} from '../filmEngine/lens/index.js';
+import {flashContribution} from '../filmEngine/flash/index.js';
+import {hasLightLeak} from '../filmEngine/grain/index.js';
+import {getGeometry,getExportSize} from '../photo-engine.js';
+import {imagePlacement} from '../filmEngine/format/index.js';
+let count=0;function test(name,fn){fn();count++;console.log('✓ '+name);}
+const w=160,h=120,source=new Uint8ClampedArray(w*h*4);
+for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=(y*w+x)*4;source[i]=25+x/w*210;source[i+1]=20+y/h*220;source[i+2]=(x+y)%18<9?60:185;source[i+3]=255;}
+const hash=d=>createHash('sha256').update(d).digest('hex');
+const render=(s,input=source,width=w,height=h)=>renderFilm(new Uint8ClampedArray(input),width,height,s);
+const state=id=>({...createState(),camera:id});
+const clean=id=>({...state(id),cameraOptions:{grain:false,frame:false,lightLeaks:false,lens:true}});
+const meanDiff=(a,b)=>a.reduce((sum,v,i)=>sum+(i%4===3?0:Math.abs(v-b[i])),0)/(a.length/4*3);
+test('Five exact product names; profiles contain behavior, not LUTs',()=>{assert.deepEqual(CAMERA_PROFILES.map(p=>p.name),['CLASSIC 38','FLASH 800','LOMO 32','DREAM 120','INSTANT 160']);for(const p of CAMERA_PROFILES){for(const key of ['tone','exposure','colorResponse','grain','lens','format','highlights','imperfections'])assert.ok(p[key]);assert.ok(!p.lut);}});
+test('Five clean responses remain perceptually separated without grain, borders or leaks',()=>{const results=CAMERA_PROFILES.map(p=>render(clean(p.id)));for(let a=0;a<5;a++)for(let b=a+1;b<5;b++)assert.ok(meanDiff(results[a],results[b])>2,`${a}/${b}: ${meanDiff(results[a],results[b])}`);});
+for(const profile of CAMERA_PROFILES){
+ test(profile.name+' is deterministic and does not mutate recipe',()=>{const s=state(profile.id),before=clone(s);assert.deepEqual(render(s),render(s));assert.deepEqual(s,before);});
+ test(profile.name+' has an optical response without decorative texture',()=>{const a=clean(profile.id),b=clone(a);b.cameraOptions.lens=false;assert.ok(meanDiff(render(a),render(b))>.08);});
+ test(profile.name+' responds to a new capture without changing the source',()=>{const a=state(profile.id),b=clone(a);b.seed=987654;assert.notEqual(hash(render(a)),hash(render(b)));});
+ test(profile.name+' zero contribution preserves transparent RGB and alpha',()=>{const s=state(profile.id);s.intensity=0;const a=new Uint8ClampedArray(source);for(let i=3;i<a.length;i+=8)a[i]=0;assert.deepEqual(render(s,a),a);});
+}
+test('CLASSIC preserves black and compresses highlights progressively',()=>{const p=getCameraProfile('classic38').tone;assert.ok(toneResponse(0,p)<.00001);let prev=0;for(let i=0;i<=2000;i++){const x=toneResponse(i/1000,p);assert.ok(x>=prev-1e-6);assert.ok(x<1);prev=x;}const high=toneResponse(2,p)-toneResponse(1.8,p),middle=toneResponse(.4,p)-toneResponse(.2,p);assert.ok(high<middle*.2);});
+test('CLASSIC skin stays close to input on uniform medium-light skin',()=>{const a=new Uint8ClampedArray(w*h*4);for(let i=0;i<a.length;i+=4)a.set([190,137,111,255],i);const s=clean('classic38'),out=render(s,a),i=(Math.floor(h/2)*w+Math.floor(w/2))*4;assert.ok(Math.abs(out[i]-190)<12);assert.ok(Math.abs(out[i+1]-137)<12);assert.ok(Math.abs(out[i+2]-111)<12);});
+test('FLASH falls with inverse squared approximate distance and responds to placement',()=>{const p=getCameraProfile('flash800').flash,s={distance:2,power:100,x:.5,y:.45};const near=flashContribution(.5,.45,.6,.4,.3,s,p),far=flashContribution(.95,.95,.6,.4,.3,s,p);assert.ok(near>far*5);assert.ok(flashContribution(.5,.45,.6,.4,.3,{...s,distance:3.5},p)<near*.5);assert.ok(flashContribution(.5,.45,.6,.4,.3,{...s,x:.15},p)<near*.4);});
+test('Flash illuminates foreground and darkens distant background instead of global exposure',()=>{const a=new Uint8ClampedArray(w*h*4);for(let i=0;i<a.length;i+=4)a.set([65,58,48,255],i);const s=clean('flash800'),off=render(s,a);s.flash.enabled=true;const on=render(s,a),center=(Math.floor(h*.45)*w+Math.floor(w*.5))*4,corner=(h*w-1)*4;assert.ok(on[center]>off[center]+10);assert.ok(on[corner]<off[corner]);});
+test('Other cameras ignore the flash switch',()=>{for(const p of CAMERA_PROFILES.filter(p=>!p.flash)){const a=state(p.id),b=clone(a);b.flash.enabled=true;assert.deepEqual(render(a),render(b));}});
+test('LOMO per-capture exposure stays inside ±0.10 EV',()=>{const p=getCameraProfile('lomo32');for(let seed=0;seed<1000;seed++){const ev=exposureEV(p,{lowLight:0},seed);assert.ok(Math.abs(ev)<=.10);}});
+test('DREAM optical falloff is gradual, corner softness exceeds center and CLASSIC',()=>{const p=getCameraProfile('dream120').lens,c=getCameraProfile('classic38').lens;const center=opticalField(.5,.5,p,17),edge=opticalField(.85,.85,p,17),corner=opticalField(.99,.99,p,17);assert.ok(corner.softness>center.softness*20);assert.ok(center.softness<edge.softness&&edge.softness<corner.softness);assert.ok(corner.transmission>0&&corner.transmission<edge.transmission);assert.ok(corner.softness>opticalField(.99,.99,c,17).softness*10);});
+test('DREAM checkerboard is softened predominantly at corners',()=>{const size=180,a=new Uint8ClampedArray(size*size*4);for(let y=0;y<size;y++)for(let x=0;x<size;x++){const i=(y*size+x)*4,v=(x+y)%2?220:40;a.set([v,v,v,255],i);}const p=getCameraProfile('dream120'),out=applyLens(a,size,size,p,41731);const contrast=(x,y)=>Math.abs(out[(y*size+x)*3]-out[(y*size+x+1)*3]);assert.ok(contrast(90,90)>contrast(5,5)*2);});
+test('DREAM leaks occur on 8–15% of 2000 seeded captures; other cameras have none',()=>{const p=getCameraProfile('dream120');let hits=0;for(let seed=0;seed<2000;seed++)hits+=hasLightLeak(p,seed);assert.ok(hits/2000>=.08&&hits/2000<=.15);for(const other of CAMERA_PROFILES.filter(p=>p.id!=='dream120'))for(let seed=0;seed<100;seed++)assert.equal(hasLightLeak(other,seed),false);});
+test('Leak switch is exactly neutral on captures without a leak and changes a seeded leak capture',()=>{const p=getCameraProfile('dream120');let hit=0,miss=0;while(!hasLightLeak(p,hit))hit++;while(hasLightLeak(p,miss))miss++;for(const [seed,expected]of[[hit,true],[miss,false]]){const a=state(p.id);a.seed=seed;const b=clone(a);b.cameraOptions.lightLeaks=false;assert.equal(hash(render(a))!==hash(render(b)),expected);}});
+test('Instant low-light exposure loses more density than FLASH ambient',()=>{const scene={lowLight:1};assert.ok(exposureEV(getCameraProfile('instant160'),scene,41731)<exposureEV(getCameraProfile('flash800'),scene,41731)-.4);});
+test('Instant chemical texture is not a negative-grain model',()=>{assert.equal(getCameraProfile('instant160').grain.model,'chemical');assert.equal(getCameraProfile('flash800').grain.model,'negative');const a=clean('instant160'),b=clone(a);b.cameraOptions.grain=true;assert.notEqual(hash(render(a)),hash(render(b)));assert.ok(meanDiff(render(a),source)>5);});
+test('DREAM preview and export geometry are square before processing',()=>{const s=state('dream120'),g=getGeometry({width:1200,height:800},s);assert.equal(g.width,g.height);assert.equal(g.imageWidth,g.imageHeight);assert.equal(g.crop.width,2/3);assert.equal(getExportSize({width:1200,height:800},s,{original:true}).width,800);});
+test('INSTANT aperture and exterior frame preserve independent physical proportions',()=>{const s=state('instant160'),g=getGeometry({width:1200,height:1000},s),slot=imagePlacement(g,{width:g.width,height:g.height});assert.ok(Math.abs(g.width/g.height-88/107)<.002);assert.ok(Math.abs(slot.width/slot.height-77/79)<.002);assert.ok(g.height-slot.y-slot.height>slot.y*3);s.cameraOptions.frame=false;const plain=getGeometry({width:1200,height:1000},s);assert.equal(plain.imageWidth,g.imageWidth);assert.equal(plain.imageHeight,g.imageHeight);assert.ok(Math.abs(plain.width/plain.height-77/79)<.002);});
+test('Portrait 35mm uses 2:3, crop cannot stretch image, format bypass exposes full source',()=>{const s=state('classic38');assert.deepEqual([getGeometry({width:800,height:1200},s).width,getGeometry({width:800,height:1200},s).height],[800,1200]);s.camera='dream120';s.formatBypass=true;const g=getGeometry({width:800,height:1200},s);assert.equal(g.width,800);assert.equal(g.height,1200);});
+test('Full-resolution framed export enforces 24MP and 8192px limits including borders',()=>{assert.throws(()=>getExportSize({width:8000,height:6000},state('instant160'),{original:true}),/24 MP/);const size=getExportSize({width:8000,height:6000},state('instant160'));assert.ok(size.width*size.height<=24000000&&Math.max(size.width,size.height)<=8192);});
+test('Scene analysis weights alpha and identifies relative low light',()=>{const a=new Uint8ClampedArray([20,20,20,255,255,255,255,0]);assert.ok(analyzeScene(a).lowLight>.9);assert.equal(analyzeScene(new Uint8ClampedArray([180,180,180,255])).lowLight,0);});
+console.log(`\n${count} camera behavior tests passed.`);

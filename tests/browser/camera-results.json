@@ -1,0 +1,227 @@
+[
+  {
+    "name": "Exactly five camera cards and no legacy filter tab",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Upload preserves 600×400 source",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Manual brightness remains effective",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Camera switch preserves manual adjustment",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Zero strength preserves same manual pixels across cameras",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Camera contributes real processed pixels",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Flash distance changes preview",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Flash center changes preview",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Flash position participates in history",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Flash redo restores position",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "New capture changes seeded appearance",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Undo new capture restores exact previous pixels",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Grain checkbox changes pixels while preserving camera colors",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "classic38 PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":4245992360,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "flash800 PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":1217410999,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "lomo32 PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":1452105743,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "DREAM renders square in editor",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "dream120 PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":2049485099,\"width\":400,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "INSTANT renders physical print aspect",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "INSTANT retains own response without border",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "instant160 PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":277042123,\"width\":446,\"height\":542,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "Five cameras produce five distinct editor results",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Before/after canvas uses same physical frame dimensions",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Comparison divider updates",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Comparison follows a camera format change",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "100 percent view is one image pixel per CSS pixel",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Crop draft uses full oriented source and square selection",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Square crop applies before optical processing",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Cancel crop restores exact committed result",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Stickers remain adjustable",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Crop, rotation, alignment, camera, sticker and decorative frame export identically",
+    "passed": true,
+    "details": "{\"hash\":1492185247,\"width\":260,\"height\":260,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "PNG is downloaded as a real file",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "JPEG uses requested custom size and MIME",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Reset returns to default camera and removes decorative edits",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Reset is reversible",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Layout fits 320px",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Layout fits 375px",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Layout fits 393px",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Layout fits 430px",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Layout fits 768px",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Layout fits 1360px",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Favorite survives page reload",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Development comparison renders all five engines",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "Comparison disables grain, frame and leaks together",
+    "passed": true,
+    "details": ""
+  },
+  {
+    "name": "No uncaught exceptions across editor and comparison",
+    "passed": true,
+    "details": "[]"
+  }
+]

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#fffaf0" />
+    <meta name="description" content="Cinco câmeras, molduras e adesivos de coelhinhos e nuvens para transformar suas fotos em lembranças especiais." />
+    <link rel="icon" type="image/svg+xml" href="./assets/mascot.svg" />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./studio.css" />
+    <title>Editor da Princesa · feito com amor</title>
+  <link rel="stylesheet" href="./presets.css" /></head>
+  <body>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Editor da Princesa, início">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M15 22C6 4 18-2 21 19M27 19C28-2 42 5 33 24" fill="#fffdf5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M11 30c0-10 7-15 14-15s14 6 14 15c0 9-7 13-14 13s-14-4-14-13Z" fill="#fffdf5" stroke="currentColor" stroke-width="1.9"/><path d="m18 28 .1 1m13-1 .1 1m-8 4 2 2 2-2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><ellipse cx="16" cy="33" rx="3" ry="2" fill="#efb5a1"/><ellipse cx="34" cy="33" rx="3" ry="2" fill="#efb5a1"/></svg></span>
+        <span class="brand-type">editor da <em>princesa</em><small>FEITO COM AMOR, SÓ PRA VOCÊ</small></span>
+      </a>
+      <div class="header-right"><span class="header-note"><span class="tiny-sparkle">✧</span> seu pequeno universo criativo</span><button class="love-button icon-button" id="love-button" aria-label="Abrir um recadinho de amor" title="Um recadinho para você"><span data-icon="heart"></span><span class="love-dot"></span></button></div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div class="intro-cloud cloud-left" aria-hidden="true"><svg viewBox="0 0 140 70"><path d="M21 57C-3 54 1 27 24 27 27 1 68-1 76 26c25-16 49 1 43 19 23 4 19 18-1 18H24" fill="#fffefa" stroke="#e6dfc8" stroke-width="1.5"/><path d="M48 40v3m17-3v3m-11 4q4 4 7 0" fill="none" stroke="#a59a7b" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <p class="eyebrow"><span></span> SEU PEQUENO ESTÚDIO FOTOGRÁFICO <span></span></p>
+        <h1 id="page-title">Suas memórias, com um toque de <em>magia.</em><svg class="title-sparkle" viewBox="0 0 36 44" aria-hidden="true"><path d="m18 3 3.5 14L33 22l-11.5 4.5L18 41l-4-14.5L3 22l11-5Z" fill="#f2ce58"/><path d="m31 2 1 4 3 1-3 1-1 4-1-4-3-1 3-1Z" fill="#c3b882"/></svg></h1>
+        <p class="intro-description">Cinco câmeras. Infinitas maneiras de guardar um instante.</p>
+        <div class="intro-cloud cloud-right" aria-hidden="true"><svg viewBox="0 0 140 70"><path d="M21 57C-3 54 1 27 24 27 27 1 68-1 76 26c25-16 49 1 43 19 23 4 19 18-1 18H24" fill="#fffefa" stroke="#e6dfc8" stroke-width="1.5"/></svg><span>✧</span></div>
+      </section>
+
+      <div class="editor-layout">
+        <aside class="toolbox" aria-label="Ferramentas de edição">
+          <div class="upload-section">
+            <div class="section-eyebrow"><span class="step-number">01</span> A SUA LEMBRANÇA</div>
+            <button class="upload-zone" id="upload-button"><span class="upload-icon" data-icon="image-plus"></span><span><strong id="upload-title">Escolher minha foto</strong><small id="upload-subtitle">Uma foto, mil possibilidades.</small></span><span class="upload-plus" data-icon="plus"></span></button>
+            <input type="file" id="photo-input" accept="image/*,.heic,.heif" hidden />
+            <p class="upload-footnote"><span data-icon="lock"></span> A sua foto fica só com você.</p>
+          </div>
+
+          <div class="customize-section">
+            <div class="section-eyebrow"><span class="step-number">02</span> UM POUQUINHO DE ENCANTO</div>
+            <div class="tool-tabs" role="tablist" aria-label="Personalizar a foto">
+              <button class="tool-tab active" id="tab-cameras" role="tab" aria-selected="true" aria-controls="panel-cameras" data-tab="cameras"><span data-icon="sparkles"></span>Câmeras</button>
+              <button class="tool-tab" id="tab-adjust" role="tab" aria-selected="false" aria-controls="panel-adjust" tabindex="-1" data-tab="adjust"><span data-icon="adjust"></span>Ajustes</button>
+              <button class="tool-tab" id="tab-frames" role="tab" aria-selected="false" aria-controls="panel-frames" tabindex="-1" data-tab="frames"><span data-icon="frame"></span>Molduras</button>
+              <button class="tool-tab" id="tab-stickers" role="tab" aria-selected="false" aria-controls="panel-stickers" tabindex="-1" data-tab="stickers"><span data-icon="sticker"></span>Adesivos</button>
+            </div>
+
+            <section class="tool-panel" id="panel-cameras" role="tabpanel" aria-labelledby="tab-cameras">
+              <div class="panel-heading"><h2>Cinco jeitos de guardar a luz.</h2><span class="library-count">5 câmeras</span></div>
+              <p class="family-note">Escolha uma câmera. Cada uma tem sua lente, sua cor e seu jeito de revelar.</p>
+              <div class="filter-grid camera-grid" id="camera-grid"></div>
+              <div class="selected-filter-info"><strong id="current-camera-name">CLASSIC 38</strong><p id="current-camera-description"></p><span id="camera-format" class="camera-format"></span></div>
+              <div class="intensity-control"><label for="intensity">Presença da câmera <output id="intensity-value">100%</output></label><input id="intensity" type="range" min="0" max="100" value="100" /><div class="range-captions"><span>só meus ajustes</span><span>olhar completo</span></div></div>
+              <div class="texture-strength"><label for="camera-texture">Textura da captura <output id="camera-texture-value">100%</output></label><input type="range" id="camera-texture" min="0" max="100" value="100" /><p>Grão e superfície do filme. A lente e as cores mantêm sua personalidade.</p></div>
+              <div class="camera-options"><label><input type="checkbox" id="camera-grain" checked> Grão / microtextura</label><label id="camera-frame-label" hidden><input type="checkbox" id="camera-frame" checked> Borda do instantâneo</label><label id="camera-leaks-label" hidden><input type="checkbox" id="camera-leaks" checked> Vazamentos ocasionais</label></div>
+              <div id="flash-controls" class="flash-controls" hidden><label class="camera-toggle"><input id="flash-enabled" type="checkbox"> Flash frontal</label><div id="flash-settings" hidden></div><p>Posicione a luz sobre a pessoa ou objeto próximo.</p></div>
+              <button class="secondary-button new-capture" id="new-capture">↻ Nova captura</button><p class="capture-note">Uma nova variação do filme. Você pode desfazer.</p>
+            </section>
+
+            <section class="tool-panel" id="panel-adjust" role="tabpanel" aria-labelledby="tab-adjust" hidden><div class="adjustment-intro"><h2>Do seu jeitinho.</h2><button id="reset-adjustments" class="text-reset">Restaurar ajustes</button></div><div id="adjustments-root"></div></section>
+
+            <section class="tool-panel" id="panel-frames" role="tabpanel" aria-labelledby="tab-frames" hidden>
+              <div class="panel-heading"><h2>Um abraço para sua foto.</h2><span class="mini-sparkle" aria-hidden="true">♡</span></div>
+              <div class="frame-grid" id="frame-grid"></div>
+              <p class="panel-tip"><span data-icon="heart"></span> Porque toda lembrança merece um carinho.</p>
+            </section>
+
+            <section class="tool-panel" id="panel-stickers" role="tabpanel" aria-labelledby="tab-stickers" hidden>
+              <div class="panel-heading"><h2>Detalhes que são a sua cara.</h2></div>
+              <div class="sticker-categories" aria-label="Categorias de adesivos"><button class="category active" data-category="coelhos" aria-pressed="true">Coelhinhos</button><button class="category" data-category="nuvens" aria-pressed="false">Céu</button><button class="category" data-category="crepusculo" aria-pressed="false">Crepúsculo</button><button class="category" data-category="carinhos" aria-pressed="false">Carinhos</button><button class="category" data-category="animais" aria-pressed="false">Animais <span>20</span></button><button class="category" data-category="entretenimento" aria-pressed="false">Entretenimento <span>15</span></button><button class="category" data-category="musica" aria-pressed="false">Música <span>16</span></button></div>
+              <div class="sticker-grid" id="sticker-grid"></div>
+              <p class="panel-tip"><span data-icon="hand"></span> Toque para adicionar. Arraste para onde quiser.</p>
+            </section>
+
+            <section class="sticker-controls" id="sticker-controls" aria-label="Ajustar adesivo selecionado" hidden>
+              <div class="selected-heading"><span id="selected-sticker-name">Seu adesivo</span><div><button id="duplicate-sticker" class="icon-button small" aria-label="Duplicar adesivo" title="Duplicar adesivo"><span data-icon="copy"></span></button><button id="remove-sticker" class="icon-button small" aria-label="Excluir adesivo" title="Excluir adesivo"><span data-icon="trash"></span></button><button id="deselect-sticker" class="icon-button small" aria-label="Concluir ajuste do adesivo" title="Concluir"><span data-icon="check"></span></button></div></div>
+              <label for="sticker-size">Tamanho <output id="sticker-size-value">25%</output></label><input type="range" id="sticker-size" min="7" max="100" value="25" />
+              <label for="sticker-rotation">Rotação <output id="sticker-rotation-value">0°</output></label><input type="range" id="sticker-rotation" min="-180" max="180" value="0" />
+            </section>
+          </div>
+
+          <div class="little-note"><img src="./assets/mascot.svg" alt="" width="75" height="75" /><div><span>psst… você deixa tudo</span><strong>mais bonito. ♡</strong></div><span class="note-star" aria-hidden="true">✧</span></div>
+        </aside>
+
+        <section class="workspace" aria-label="Prévia da sua foto">
+          <div class="workspace-header"><div class="canvas-heading"><span class="status-dot"></span><h2>Sua pequena obra de arte</h2><span class="demo-badge" id="demo-badge">EXPERIMENTE</span></div><div class="history-controls"><button class="icon-button" id="undo-button" aria-label="Desfazer" title="Desfazer (Ctrl+Z)" disabled><span data-icon="undo"></span></button><button class="icon-button" id="redo-button" aria-label="Refazer" title="Refazer (Ctrl+Shift+Z)" disabled><span data-icon="redo"></span></button><span class="toolbar-divider"></span><button class="icon-button" id="reset-button" aria-label="Recomeçar edição" title="Recomeçar edição"><span data-icon="reset"></span></button></div></div>
+          <div class="stage" id="stage">
+            <div class="stage-decoration decoration-one" aria-hidden="true">✧</div><div class="stage-decoration decoration-two" aria-hidden="true">✦</div>
+            <div class="photo-note" aria-hidden="true"><svg viewBox="0 0 56 42"><path d="M4 5q26-5 40 20M31 25l14 3-2-14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>um instante<br/>para guardar</span></div>
+            <div class="stage-viewport" id="stage-viewport" tabindex="0" aria-label="Área da fotografia. Com zoom, arraste ou role para explorar."><div class="viewport-content">
+              <div class="artboard" id="artboard" tabindex="0" aria-label="Foto em edição. Selecione um adesivo para mover, redimensionar ou girar.">
+                <canvas id="photo-canvas" role="img" aria-label="Prévia da imagem editada"></canvas>
+                <div class="sticker-layer" id="sticker-layer"></div>
+                <div class="before-layer" id="before-layer" hidden><canvas id="before-canvas" role="img" aria-label="Foto sem ajustes, com o mesmo recorte"></canvas><span class="before-label">ANTES · MESMO RECORTE</span></div>
+                <div class="compare-divider" id="compare-divider" hidden><button id="compare-handle" role="slider" aria-label="Divisor antes e depois" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">↔</button><span class="after-label">DEPOIS</span></div>
+                <div id="crop-layer" class="crop-layer" hidden><div id="crop-box" class="crop-box" tabindex="0" aria-label="Área do recorte. Arraste ou use as setas para mover."><span class="crop-grid"></span><button class="crop-handle nw" data-crop-handle="nw" aria-label="Canto superior esquerdo do recorte"></button><button class="crop-handle ne" data-crop-handle="ne" aria-label="Canto superior direito do recorte"></button><button class="crop-handle sw" data-crop-handle="sw" aria-label="Canto inferior esquerdo do recorte"></button><button class="crop-handle se" data-crop-handle="se" aria-label="Canto inferior direito do recorte"></button></div></div>
+                <div class="artboard-loading" id="artboard-loading"><span class="loader"></span><span>Preparando seu cantinho…</span></div>
+              </div></div></div>
+            <span class="render-status" id="render-status" role="status" hidden>Revelando…</span>
+            <div class="stage-caption"><span data-icon="sparkles"></span><span id="stage-caption-text">Uma ilustração para experimentar. A próxima pode ser sua foto!</span></div>
+          </div>
+          <div class="view-toolbar"><button id="compare-button" class="secondary-button" aria-pressed="false"><span data-icon="compare"></span>Antes / depois</button><div class="zoom-toolbar"><button id="zoom-out" aria-label="Diminuir zoom">−</button><label class="sr-only" for="zoom-select">Zoom da fotografia</label><select id="zoom-select"><option value="fit">Enquadrar</option><option value="25">25%</option><option value="50">50%</option><option value="100">100% · pixels reais</option><option value="200">200%</option></select><button id="zoom-in" aria-label="Aumentar zoom">+</button></div><span id="photo-dimensions"></span></div>
+          <div class="compare-range-row" id="compare-range-row" hidden><label for="compare-position">Divisor <output id="compare-value">50%</output></label><input id="compare-position" type="range" min="0" max="100" value="50" /></div>
+          <div class="crop-toolbar" id="crop-toolbar" hidden><div class="crop-coordinate-grid"><label>Esquerda %<input id="crop-x" type="number" min="0" max="97" step=".1" /></label><label>Topo %<input id="crop-y" type="number" min="0" max="97" step=".1" /></label><label>Largura %<input id="crop-width" type="number" min="3" max="100" step=".1" /></label><label>Altura %<input id="crop-height" type="number" min="3" max="100" step=".1" /></label></div><div class="crop-buttons"><span id="crop-size-label"></span><button id="crop-cancel" class="secondary-button">Cancelar</button><button id="crop-apply" class="primary-button">Aplicar recorte</button></div></div>
+          <div class="workspace-footer"><div class="save-note"><span class="save-note-icon" data-icon="heart"></span><div><strong>Seu original continua intacto.</strong><span>JPEG ou PNG · no tamanho que você escolher.</span></div></div><button class="primary-button" id="save-button" disabled><span data-icon="download"></span><span>Guardar minha criação</span><span class="button-sparkle" aria-hidden="true">✧</span></button></div>
+        </section>
+      </div>
+
+      <footer class="site-footer"><span>Entre nuvens e coelhinhos, tudo fica mais bonito.</span><span class="footer-heart">♡</span><span>Um presente feito especialmente para você.</span></footer>
+    </main>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" hidden><span data-icon="check"></span><span id="toast-text"></span></div>
+    <dialog class="sweet-dialog" id="love-dialog" aria-labelledby="love-title"><button class="dialog-close icon-button" aria-label="Fechar recadinho" data-close-dialog><span data-icon="close"></span></button><img class="letter-mascot" src="./assets/mascot.svg" alt="Coelhinho segurando um coração" /><p class="eyebrow">HOJE É TODO SEU</p><h2 id="love-title">Feliz aniversário,<br/><em>minha princesa.</em></h2><p>Este é um pedacinho do seu mundo: cheio de nuvens, coelhinhos e coisas que me fazem lembrar de você.</p><p>Que nunca faltem motivos para sorrir, sonhos para realizar e momentos lindos para guardar.</p><span class="letter-signature">Com todo o meu amor. ♡</span><button class="primary-button" data-close-dialog>Vamos criar memórias <span data-icon="heart"></span></button></dialog>
+    <dialog class="sweet-dialog export-dialog" id="export-dialog" aria-labelledby="export-title">
+      <button class="dialog-close icon-button" aria-label="Fechar exportação" data-close-dialog><span data-icon="close"></span></button>
+      <p class="eyebrow">UM INSTANTE PARA GUARDAR</p><h2 id="export-title">Leve esse <em>carinho.</em></h2>
+      <div id="export-settings"><div class="export-fields"><label>Formato<select id="export-format"><option value="jpeg">JPEG · arquivo menor</option><option value="png">PNG · sem perdas</option></select></label><label>Dimensões<select id="export-size"><option value="max">Máxima disponível</option><option value="original">Original após o recorte</option><option value="2048">Até 2048 px</option><option value="1080">Até 1080 px</option><option value="custom">Personalizadas</option></select></label></div>
+      <div class="export-custom" id="export-custom" hidden><label>Largura<input id="export-width" type="number" min="1" max="8192" /></label><span>×</span><label>Altura<input id="export-height" type="number" min="1" max="8192" /></label><span class="ratio-locked" title="Proporção preservada">⌑</span></div>
+      <div class="jpeg-quality" id="jpeg-quality-row"><label for="jpeg-quality">Qualidade JPEG <output id="jpeg-quality-value">92%</output></label><input id="jpeg-quality" type="range" min="40" max="100" value="92" /></div>
+      <p id="export-dimensions" class="export-dimensions"></p><p class="export-limit">Até 24 megapixels e 8192 px por lado. O original é preservado. JPEG usa fundo branco nas transparências.</p>
+      <button class="primary-button" id="render-export"><span data-icon="download"></span>Preparar imagem</button><p id="export-error" role="alert" hidden></p></div>
+      <div id="export-result" hidden><img id="export-preview" class="export-preview" alt="Sua criação pronta para salvar" /><p id="export-file-info"></p><a class="primary-button" id="download-link" download="minha-criacao-princesa.jpg"><span data-icon="download"></span><span id="download-label">Baixar imagem</span></a><button class="secondary-button" id="share-button" hidden><span data-icon="share"></span>Compartilhar ou salvar em Fotos</button><button class="text-reset" id="export-back">Ajustar formato ou dimensões</button><p class="export-help" id="export-help"></p></div>
+    </dialog>
+    <noscript><div class="noscript-notice">Ative o JavaScript no navegador para abrir seu editor de fotos.</div></noscript>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
+
