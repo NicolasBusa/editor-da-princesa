@@ -4,18 +4,11 @@
   "regions": ["gru1"],
   "functions": {
     "api/index.mjs": {
-      "includeFiles": [
-        "*.html",
-        "*.css",
-        "*.js",
-        "assets/**",
-        "cameraProfiles/**",
-        "filmEngine/**"
-      ],
+      "includeFiles": "{*.html,*.css,*.js,assets/**,cameraProfiles/**,filmEngine/**}",
       "maxDuration": 20
     }
   },
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/api/index" }
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index" }
   ]
 }
