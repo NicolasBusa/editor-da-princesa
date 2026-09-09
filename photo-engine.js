@@ -12,8 +12,8 @@ export const FRAMES = [
 ];
 export const LIMITS = Object.freeze({ fileBytes: 35 * 1024 * 1024, previewEdge: 1100, previewPixels: 1_210_000, exportEdge: 8192, exportPixels: 24_000_000 });
 const caches = new Map();
-let worker = null, workerFailed = false, jobId = 0;
-const jobs = new Map();
+let jobId = 0;
+const workers = new Map();
 const dimensions = image => ({ width: image.naturalWidth || image.width, height: image.naturalHeight || image.height });
 const makeCanvas = (width, height) => { const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height; return canvas; };
 function context(canvas) {
@@ -94,10 +94,12 @@ function rasterize(image, geometry, size) {
   ctx.resetTransform();
   return canvas;
 }
-function getWorker() {
-  if (worker || workerFailed || typeof Worker === 'undefined') return worker;
+function getWorker(lane) {
+  if (!workers.has(lane)) workers.set(lane, { worker: null, failed: false, jobs: new Map() });
+  const entry = workers.get(lane), jobs = entry.jobs;
+  if (entry.worker || entry.failed || typeof Worker === 'undefined') return entry;
   try {
-    worker = new Worker(new URL('./processor-worker.js', import.meta.url), { type: 'module' });
+    const worker = entry.worker = new Worker(new URL('./processor-worker.js', import.meta.url), { type: 'module' });
     worker.onmessage = ({ data }) => {
       const job = jobs.get(data.id); if (!job) return;
       jobs.delete(data.id);
@@ -105,13 +107,13 @@ function getWorker() {
     };
     worker.onerror = () => {
       for (const job of jobs.values()) job.reject(new Error('O processamento foi interrompido. Tente novamente com uma dimensão menor.'));
-      jobs.clear(); worker?.terminate(); worker = null; workerFailed = true;
+      jobs.clear(); worker.terminate(); entry.worker = null; entry.failed = true;
     };
-  } catch { workerFailed = true; }
-  return worker;
+  } catch { entry.failed = true; }
+  return entry;
 }
-async function process(imageData, state) {
-  const target = getWorker();
+async function process(imageData, state, kind) {
+  const { worker: target, jobs } = getWorker(kind === 'interactive' ? 'interactive' : kind ? 'preview' : 'background');
   if (!target) return processPixels(imageData.data, imageData.width, imageData.height, state);
   return new Promise((resolve, reject) => {
     const id = ++jobId; jobs.set(id, { resolve, reject });
@@ -129,7 +131,7 @@ async function renderSize(canvas, image, state, assets, size, kind = '') {
   if (!base) {
     base = rasterize(image, geometry, innerSize);
     const ctx = context(base), pixels = ctx.getImageData(0, 0, innerSize.width, innerSize.height);
-    const result = await process(pixels, state);
+    const result = await process(pixels, state, kind);
     ctx.putImageData(new ImageData(result, innerSize.width, innerSize.height), 0, 0);
     if (kind && size.width * size.height <= 2_000_000) {
       if (cached) cached.canvas.width = cached.canvas.height = 1;

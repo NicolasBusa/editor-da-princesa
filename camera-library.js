@@ -18,7 +18,7 @@ export function mountCameraLibrary(api) {
       const name = document.createElement('span'); name.className = 'filter-name'; name.textContent = camera.name;
       const label = document.createElement('span'); label.className = 'filter-family-label'; label.textContent = camera.format.label;
       button.append(thumb, name, label);
-      button.addEventListener('click', () => { api.cancelCrop(); api.change(() => { api.getState().camera = camera.id; }); });
+      button.addEventListener('click', () => { api.cancelCrop(); api.change(() => { api.getState().camera = camera.id; }, { reveal: true }); });
       const favorite = document.createElement('button'); favorite.className = 'filter-favorite'; favorite.dataset.favorite = camera.id;
       favorite.addEventListener('click', () => { favorites.has(camera.id) ? favorites.delete(camera.id) : favorites.add(camera.id); try { localStorage.setItem('princesa.favorite-cameras', JSON.stringify([...favorites])); } catch {} sync(); });
       item.append(button, favorite); grid.append(item);

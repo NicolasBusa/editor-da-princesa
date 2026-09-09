@@ -1,4 +1,10 @@
-# Editor da Princesa · versão 4
+# Editor da Princesa · versão 4.1
+
+No celular, a foto ocupa a área principal e a barra inferior rola horizontalmente. Toque em uma ferramenta para abrir seus controles; em Ajustes, deslize a segunda barra para acessar Luz, Cor, HSL, Curvas, Gradação, Detalhes, Efeitos e Recorte. Toque novamente na ferramenta ou em **Ver a foto** para recolher o painel. Importação, histórico e exportação ficam no topo; comparação e zoom continuam abaixo da foto.
+
+Adesivos podem ser espelhados pelo botão ↔ do elemento selecionado. A ferramenta **Texto** adiciona várias caixas com fonte, cor, negrito, itálico, sombra e alinhamento; arraste, gire, redimensione, duplique ou exclua como um adesivo. Textos participam do histórico e da exportação, mas não dos presets. A moldura Retratinho tem a borda inferior sem frase fixa.
+
+Durante o arraste dos ajustes, a prévia usa uma resolução temporária menor e atualiza continuamente; ao terminar o gesto, refina a resolução. Um worker separado permite responder ao próximo gesto enquanto a prévia completa termina. O motor e os valores dos controles continuam os mesmos; a exportação usa a resolução escolhida. **Revelando** aparece somente ao aplicar uma câmera ou preset salvo.
 
 Cinco câmeras com renderização própria num editor de fotos em amarelo, nuvens e coelhinhos. O processamento acontece no navegador, sem upload das fotos a um servidor. Agora com entrada pela senha **1309**, coleção de presets conectada ao Supabase e 67 adesivos em sete categorias. Veja [SUPABASE.md](SUPABASE.md) para a configuração da nuvem.
 

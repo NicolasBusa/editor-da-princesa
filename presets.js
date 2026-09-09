@@ -43,7 +43,7 @@ export function mountPresets(api) {
     for (const row of rows) {
       const card = document.createElement('div'); card.className = 'preset-card'; card.dataset.presetId = row.id;
       const apply = button('', `Aplicar ${row.name}`, () => {
-        try { api.commit(); api.cancelCrop(); api.select(null); api.change(() => applyPreset(api.getState(), row.recipe)); api.toast(`“${row.name}” aplicado. Você pode desfazer.`); }
+        try { api.commit(); api.cancelCrop(); api.select(null); api.change(() => applyPreset(api.getState(), row.recipe), { reveal: true }); api.toast(`“${row.name}” aplicado. Você pode desfazer.`); }
         catch (e) { api.toast(e.message, true); }
       }, 'preset-apply');
       const title = document.createElement('strong'); title.textContent = row.name;

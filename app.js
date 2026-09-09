@@ -4,10 +4,13 @@ import { captureSeed, createState, defaultComposition } from './model.js';
 import { mountCameraLibrary } from './camera-library.js';
 import { mountStudio } from './studio-ui.js';
 import { STICKERS } from './stickers.js';
+import { mountMobileEditor } from './mobile-editor.js';
+import { mountTextEditor } from './text-editor.js';
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const ICONS = {
+  text: '<path d="M4 5h16M12 5v15M8 20h8M4 5v3m16-3v3"/>',
   adjust: '<path d="M4 7h16M4 17h16M8 4v6m8 4v6"/>',
   compare: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 3v18m-9-9h9"/>',
   heart: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
@@ -46,10 +49,11 @@ let selectedId = null;
 let undoStack = [];
 let redoStack = [];
 let transaction = null;
-let renderPending = false;
 let painting = false;
+let interactivePainting = false, lastFullRevision = -1, lastInteractiveRevision = -1;
 let renderRevision = 0;
 let studio = null, library = null;
+let navigation = null, textEditor = null, reveal = false, interactiveUntil = 0, settleTimer;
 let loadVersion = 0;
 let toastTimer;
 let category = 'coelhos';
@@ -84,11 +88,13 @@ function commitTransaction() {
   const before = transaction;
   transaction = null;
   pushHistory(before);
+  interactiveUntil = 0; requestPaint();
 }
-function changeState(change) {
+function changeState(change, options = {}) {
   commitTransaction();
   const before = clone(state);
   change();
+  reveal = !!options.reveal;
   pushHistory(before);
   refresh();
 }
@@ -120,14 +126,17 @@ function updateHistory() {
 }
 
 async function paint() {
-  if (painting || !photo) return;
-  renderPending = false; painting = true;
+  const interactive = performance.now() < interactiveUntil;
+  if (!photo || (interactive ? interactivePainting || lastInteractiveRevision === renderRevision : painting || lastFullRevision === renderRevision)) return;
+  if (interactive) { interactivePainting = true; lastInteractiveRevision = renderRevision; }
+  else { painting = true; lastFullRevision = renderRevision; }
   const revision = renderRevision, source = photo;
   const temp = document.createElement('canvas');
-  $('#render-status').hidden = false;
+  const snapshot = clone(studio?.renderState() || state);
+  $('#render-status').hidden = !reveal;
   try {
-    await renderEditor(temp, source, clone(studio?.renderState() || state), assets, studio?.renderOptions() || {});
-    if (revision === renderRevision && source === photo) {
+    await renderEditor(temp, source, snapshot, assets, { ...(studio?.renderOptions() || {}), ...(interactive ? { maxEdge: 260, maxPixels: 67600, kind: 'interactive' } : {}) });
+    if (source === photo && (revision === renderRevision || (interactive && snapshot.camera === state.camera && snapshot.frame === state.frame && JSON.stringify(snapshot.stickers) === JSON.stringify(state.stickers) && JSON.stringify(snapshot.composition) === JSON.stringify(state.composition)))) {
       canvas.width = temp.width; canvas.height = temp.height;
       canvas.getContext('2d').drawImage(temp, 0, 0);
       syncStickerLayer();
@@ -135,17 +144,23 @@ async function paint() {
     }
   } catch (error) { toast(error.message || 'Não foi possível atualizar a foto. Tente novamente.', true); }
   finally {
-    temp.width = temp.height = 1; painting = false;
-    if (revision !== renderRevision) { renderPending = true; requestAnimationFrame(paint); }
-    else $('#render-status').hidden = true;
+    temp.width = temp.height = 1;
+    if (interactive) interactivePainting = false; else painting = false;
+    if (revision !== renderRevision) requestAnimationFrame(paint);
+    else { reveal = false; $('#render-status').hidden = true; }
   }
 }
 function requestPaint() {
   renderRevision++;
-  $('#render-status').hidden = false;
-  if (renderPending || painting) return;
-  renderPending = true;
+  $('#render-status').hidden = !reveal;
   requestAnimationFrame(paint);
+}
+function livePreview() {
+  reveal = false;
+  interactiveUntil = performance.now() + 180;
+  clearTimeout(settleTimer);
+  settleTimer = setTimeout(() => { interactiveUntil = 0; requestPaint(); }, 190);
+  refresh();
 }
 function rangeValue(input, value) {
   input.value = value;
@@ -154,6 +169,7 @@ function rangeValue(input, value) {
 function updateControls() {
   library?.sync();
   studio?.sync();
+  textEditor?.sync();
   $$('.frame-card').forEach((button) => { const active = button.dataset.frame === state.frame; button.classList.toggle('active', active); button.setAttribute('aria-pressed', active); });
   rangeValue($('#intensity'), state.intensity);
   $('#intensity-value').textContent = `${state.intensity}%`;
@@ -161,7 +177,9 @@ function updateControls() {
   const sticker = selectedSticker();
   $('#sticker-controls').hidden = !sticker;
   if (sticker) {
-    $('#selected-sticker-name').textContent = STICKERS.find((item) => item.id === sticker.stickerId)?.name || 'Seu adesivo';
+    $('#selected-sticker-name').textContent = sticker.kind === 'text' ? 'Seu texto' : STICKERS.find((item) => item.id === sticker.stickerId)?.name || 'Seu adesivo';
+    $('#mirror-sticker').hidden = sticker.kind === 'text';
+    $('#mirror-sticker').setAttribute('aria-pressed', String(!!sticker.flipX));
     rangeValue($('#sticker-size'), Math.round(sticker.size * 100));
     $('#sticker-size-value').textContent = `${Math.round(sticker.size * 100)}%`;
     rangeValue($('#sticker-rotation'), Math.round(normalizeAngle(sticker.rotation)));
@@ -204,6 +222,7 @@ function switchTab(id, moveFocus = false) {
   $$('.tool-tab').forEach((tab) => { const active = tab.dataset.tab === id; tab.classList.toggle('active', active); tab.setAttribute('aria-selected', active); tab.tabIndex = active ? 0 : -1; if (active && moveFocus) tab.focus(); });
   $$('.tool-panel').forEach((panel) => { panel.hidden = panel.id !== `panel-${id}`; });
   studio?.sync();
+  if (moveFocus) navigation?.open(id);
 }
 $$('.tool-tab').forEach((tab) => {
   tab.addEventListener('click', () => switchTab(tab.dataset.tab));
@@ -237,9 +256,6 @@ async function addSticker(item) {
       state.stickers.push(sticker); selectedId = sticker.id;
     });
     $('#stage-caption-text').textContent = 'Arraste para mover. Use os cantinhos ou dois dedos para girar e redimensionar.';
-    if (matchMedia('(max-width:700px)').matches) {
-      artboard.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion:reduce)').matches ? 'instant' : 'smooth', block: 'center' });
-    }
   } catch { toast('Este adesivo não carregou. Tente novamente.', true); }
 }
 function removeSticker(id = selectedId) {
@@ -252,7 +268,7 @@ function duplicateSticker() {
   if (state.stickers.length >= 40) { toast('Remova um adesivo para abrir espaço para outro.'); return; }
   changeState(() => { const copy = { ...sticker, id: newId(), x: clamp(sticker.x + 0.06, 0.05, 0.95), y: clamp(sticker.y + 0.05, 0.05, 0.95) }; state.stickers.push(copy); selectedId = copy.id; });
 }
-function selectSticker(id) { selectedId = id; updateControls(); syncStickerLayer(); }
+function selectSticker(id) { selectedId = id; updateControls(); syncStickerLayer(); if (id) navigation?.open(selectedSticker()?.kind === 'text' ? 'text' : 'stickers'); }
 
 function syncStickerLayer() {
   artboard.classList.toggle('has-selection', !!selectedSticker());
@@ -267,7 +283,7 @@ function syncStickerLayer() {
       element.addEventListener('keydown', stickerKeydown);
       stickerLayer.append(element);
     }
-    const name = STICKERS.find((item) => item.id === sticker.stickerId)?.name || 'Adesivo';
+    const name = sticker.kind === 'text' ? `Texto: ${sticker.text}` : STICKERS.find((item) => item.id === sticker.stickerId)?.name || 'Adesivo';
     element.setAttribute('aria-label', `${name}. Enter para selecionar, setas para mover e Delete para excluir.`);
     element.style.setProperty('--x', `${sticker.x * 100}%`);
     element.style.setProperty('--y', `${sticker.y * 100}%`);
@@ -386,7 +402,7 @@ function endAllGestures() {
 function wireRange(selector, update) {
   const input = $(selector);
   input.addEventListener('pointerdown', beginTransaction);
-  input.addEventListener('input', () => { beginTransaction(); update(Number(input.value)); refresh(); });
+  input.addEventListener('input', () => { beginTransaction(); update(Number(input.value)); if (selector.startsWith('#sticker-')) refresh(); else livePreview(); });
   input.addEventListener('change', commitTransaction);
   input.addEventListener('blur', commitTransaction);
   input.addEventListener('pointercancel', commitTransaction);
@@ -396,6 +412,7 @@ wireRange('#camera-texture', (value) => { state.cameraTexture = value; });
 wireRange('#sticker-size', (value) => { if (selectedSticker()) selectedSticker().size = value / 100; });
 wireRange('#sticker-rotation', (value) => { if (selectedSticker()) selectedSticker().rotation = value; });
 $('#duplicate-sticker').addEventListener('click', duplicateSticker);
+$('#mirror-sticker').addEventListener('click', () => { const item = selectedSticker(); if (item) changeState(() => { item.flipX = !item.flipX; }); });
 $('#remove-sticker').addEventListener('click', () => removeSticker());
 $('#deselect-sticker').addEventListener('click', () => selectSticker(null));
 $('#undo-button').addEventListener('click', undo);
@@ -429,6 +446,7 @@ async function usePhoto(file) {
     state.composition = defaultComposition();
     state.seed = captureSeed();
     studio?.onNewPhoto();
+    navigation?.close();
     selectedId = null;
     undoStack = []; redoStack = [];
     $('#demo-badge').hidden = true;
@@ -478,9 +496,11 @@ async function init() {
     toast(error.message, true);
   }
 }
-const studioApi = { getState: () => state, getPhoto: () => photo, assets, begin: beginTransaction, commit: commitTransaction, change: changeState, preview: refresh, select: selectSticker, toast, cancelCrop: () => studio?.cancelCrop() };
+const studioApi = { getState: () => state, getPhoto: () => photo, assets, begin: beginTransaction, commit: commitTransaction, change: changeState, preview: livePreview, select: selectSticker, selected: selectedSticker, toast, cancelCrop: () => studio?.cancelCrop() };
 library = mountCameraLibrary(studioApi);
 studio = mountStudio(studioApi);
 mountPresets(studioApi);
+textEditor = mountTextEditor({ ...studioApi, preview: refresh });
+navigation = mountMobileEditor({ switchTab, fit: fitArtboard });
 init();
 

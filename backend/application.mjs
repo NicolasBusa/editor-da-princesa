@@ -10,6 +10,7 @@ const cookieName = 'princess_session';
 const lifetime = 7 * 86400 * 1000;
 const mime = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.ico': 'image/x-icon' };
 const publicFiles = new Set(['/login.html', '/login.js', '/access.css', '/assets/mascot.svg']);
+const editorExtensions = new Set(['mobile-editor.js', 'mobile-editor.css', 'text-editor.js']);
 const rootFiles = new Set(['index.html', 'app.js', 'styles.css', 'studio.css', 'camera-library.js', 'controls.js', 'decorations.js', 'model.js', 'photo-engine.js', 'processing.js', 'renderer.js', 'stickers.js', 'studio-ui.js', 'processor-worker.js', 'preset-model.js', 'presets.js', 'presets.css']);
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function createRequestHandler({ root, store, password = '1309', origin, production = false, dynamicOrigin = false, sessionSecret }) {
@@ -101,7 +102,7 @@ export function createRequestHandler({ root, store, password = '1309', origin, p
       }
       if (authenticated && route === '/login.html') { res.writeHead(302, { Location: '/' }); return res.end(); }
       if (route === '/dev/profile-comparison' || route === '/dev/profile-comparison/') route = '/dev/profile-comparison/index.html';
-      const allowed = publicFiles.has(route) || rootFiles.has(route.slice(1)) || /^\/(assets|cameraProfiles|filmEngine)\//.test(route) || (!production && (route.startsWith('/dev/') || route === '/tests/fixtures/synthetic-scenes.png'));
+      const allowed = publicFiles.has(route) || rootFiles.has(route.slice(1)) || editorExtensions.has(route.slice(1)) || /^\/(assets|cameraProfiles|filmEngine)\//.test(route) || (!production && (route.startsWith('/dev/') || route === '/tests/fixtures/synthetic-scenes.png'));
       if (!allowed || !mime[path.extname(route)]) return json(res, 404, { error: 'Não encontrado.' });
       const filename = await realpath(path.resolve(root, `.${route}`)), relative = path.relative(root, filename);
       if (relative.startsWith('..') || path.isAbsolute(relative)) return json(res, 404, { error: 'Não encontrado.' });

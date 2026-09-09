@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./studio.css" />
     <title>Editor da Princesa · feito com amor</title>
-  <link rel="stylesheet" href="./presets.css" /></head>
+  <link rel="stylesheet" href="./presets.css" /><link rel="stylesheet" href="./mobile-editor.css" /></head>
   <body>
     <div class="ambient ambient-one" aria-hidden="true"></div>
     <div class="ambient ambient-two" aria-hidden="true"></div>
@@ -46,6 +46,7 @@
               <button class="tool-tab" id="tab-adjust" role="tab" aria-selected="false" aria-controls="panel-adjust" tabindex="-1" data-tab="adjust"><span data-icon="adjust"></span>Ajustes</button>
               <button class="tool-tab" id="tab-frames" role="tab" aria-selected="false" aria-controls="panel-frames" tabindex="-1" data-tab="frames"><span data-icon="frame"></span>Molduras</button>
               <button class="tool-tab" id="tab-stickers" role="tab" aria-selected="false" aria-controls="panel-stickers" tabindex="-1" data-tab="stickers"><span data-icon="sticker"></span>Adesivos</button>
+              <button class="tool-tab" id="tab-text" role="tab" aria-selected="false" aria-controls="panel-text" tabindex="-1" data-tab="text"><span data-icon="text"></span>Texto</button>
             </div>
 
             <section class="tool-panel" id="panel-cameras" role="tabpanel" aria-labelledby="tab-cameras">
@@ -75,9 +76,11 @@
               <p class="panel-tip"><span data-icon="hand"></span> Toque para adicionar. Arraste para onde quiser.</p>
             </section>
 
-            <section class="sticker-controls" id="sticker-controls" aria-label="Ajustar adesivo selecionado" hidden>
+            <section class="tool-panel" id="panel-text" role="tabpanel" aria-labelledby="tab-text" hidden></section>
+            <section class="sticker-controls" id="sticker-controls" aria-label="Ajustar elemento selecionado" hidden>
               <div class="selected-heading"><span id="selected-sticker-name">Seu adesivo</span><div><button id="duplicate-sticker" class="icon-button small" aria-label="Duplicar adesivo" title="Duplicar adesivo"><span data-icon="copy"></span></button><button id="remove-sticker" class="icon-button small" aria-label="Excluir adesivo" title="Excluir adesivo"><span data-icon="trash"></span></button><button id="deselect-sticker" class="icon-button small" aria-label="Concluir ajuste do adesivo" title="Concluir"><span data-icon="check"></span></button></div></div>
               <label for="sticker-size">Tamanho <output id="sticker-size-value">25%</output></label><input type="range" id="sticker-size" min="7" max="100" value="25" />
+              <button id="mirror-sticker" class="secondary-button" aria-pressed="false">↔ Espelhar adesivo</button>
               <label for="sticker-rotation">Rotação <output id="sticker-rotation-value">0°</output></label><input type="range" id="sticker-rotation" min="-180" max="180" value="0" />
             </section>
           </div>

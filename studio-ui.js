@@ -14,11 +14,12 @@ export function mountStudio(api) {
     if (!crop) return api.getState();
     const state = clone(api.getState()); state.composition.crop = defaultComposition().crop; state.formatBypass = true; state.frame = 'none'; state.stickers = []; state.caption = ''; return state;
   }
-  function renderOptions() { return zoom === 'fit' ? {} : { maxEdge: LIMITS.exportEdge, maxPixels: LIMITS.exportPixels }; }
+  function renderOptions() { return zoom === 'fit' ? (matchMedia('(max-width:700px)').matches ? { maxEdge: 780, maxPixels: 608400 } : {}) : { maxEdge: LIMITS.exportEdge, maxPixels: LIMITS.exportPixels }; }
   function fit() {
     const photo = api.getPhoto(); if (!photo) return;
     const geometry = getGeometry(photo, renderState()), ratio = geometry.width / geometry.height;
-    const fitWidth = Math.min(viewport.clientWidth - 32, (viewport.clientHeight - 32) * ratio, geometry.width);
+    const gutter = matchMedia('(max-width:700px)').matches ? 8 : 32;
+    const fitWidth = Math.min(viewport.clientWidth - gutter, (viewport.clientHeight - gutter) * ratio, geometry.width);
     const width = zoom === 'fit' ? Math.max(1, fitWidth) : geometry.width * Number(zoom) / 100;
     artboard.style.width = `${width}px`; artboard.style.aspectRatio = String(ratio);
     viewport.classList.toggle('zoomed', zoom !== 'fit'); $('#zoom-select').value = zoom;
@@ -219,7 +220,7 @@ export function mountStudio(api) {
   });
   $('#render-export').addEventListener('click', async () => {
     if (exporting || !api.getPhoto()) return;
-    exporting = true; updateExport(); $('#render-export').textContent = 'Revelando sua fotografia…';
+    exporting = true; updateExport(); $('#render-export').textContent = 'Preparando sua imagem…';
     const photo = api.getPhoto(), state = clone(api.getState());
     try {
       const options = exportOptions(), size = getExportSize(photo, state, options);

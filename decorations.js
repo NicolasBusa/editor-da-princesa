@@ -62,11 +62,6 @@ function drawFrame(ctx, width, height, frame) {
       const border = unit * 0.044;
       const bottom = Math.max(border * 2, height * 0.105);
       edge(ctx, width, height, border, '#fffdf4', bottom);
-      ctx.fillStyle = '#9b8066';
-      ctx.font = `italic ${Math.max(10, unit * 0.026)}px Georgia, serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('um pedacinho de felicidade', width / 2, height - bottom * 0.46, width * 0.85);
       break;
     }
     case 'coracoes': {
@@ -100,6 +95,7 @@ function resolveSticker(sticker, assets) {
 
 function drawStickers(ctx, width, height, stickers, assets) {
   for (const sticker of stickers || []) {
+    if (sticker.kind === 'text') { drawTextObject(ctx, width, height, sticker); continue; }
     const image = resolveSticker(sticker, assets);
     if (!image || (image instanceof HTMLImageElement && (!image.complete || !image.naturalWidth))) continue;
     const size = clamp(Number(sticker.size) || 0.22, 0.01, 3) * width;
@@ -110,9 +106,32 @@ function drawStickers(ctx, width, height, stickers, assets) {
     ctx.save();
     ctx.translate(x * width, y * height);
     ctx.rotate((Number(sticker.rotation) || 0) * Math.PI / 180);
+    ctx.scale(sticker.flipX ? -1 : 1, 1);
     ctx.drawImage(image, -size / 2, -size / aspect / 2, size, size / aspect);
     ctx.restore();
   }
+}
+
+export const TEXT_FONTS = { sans: 'Arial, sans-serif', serif: 'Georgia, serif', mono: 'Courier New, monospace', handwritten: 'cursive' };
+export function textLayout(ctx, item) {
+  ctx.save();
+  ctx.font = `${item.italic ? 'italic ' : ''}${item.bold ? '700' : '400'} 64px ${TEXT_FONTS[item.font] || TEXT_FONTS.sans}`;
+  const lines = String(item.text ?? '').slice(0, 240).split('\n');
+  const width = Math.max(64, ...lines.map(line => ctx.measureText(line).width)) + 16;
+  ctx.restore();
+  return { lines, width, height: lines.length * 80 + 16 };
+}
+function drawTextObject(ctx, width, height, item) {
+  const layout = textLayout(ctx, item), size = clamp(Number(item.size) || .5, .01, 3) * width;
+  ctx.save(); ctx.translate(item.x * width, item.y * height);
+  ctx.rotate((item.rotation || 0) * Math.PI / 180);
+  ctx.scale(size / layout.width * (item.flipX ? -1 : 1), size / layout.width);
+  ctx.font = `${item.italic ? 'italic ' : ''}${item.bold ? '700' : '400'} 64px ${TEXT_FONTS[item.font] || TEXT_FONTS.sans}`;
+  ctx.fillStyle = item.color || '#fffdf4'; ctx.textAlign = item.align || 'center'; ctx.textBaseline = 'middle';
+  if (item.shadow) { ctx.shadowColor = 'rgba(0,0,0,.65)'; ctx.shadowBlur = 7; ctx.shadowOffsetY = 3; }
+  const x = item.align === 'left' ? -layout.width / 2 + 8 : item.align === 'right' ? layout.width / 2 - 8 : 0;
+  layout.lines.forEach((line, i) => ctx.fillText(line, x, -layout.height / 2 + 48 + i * 80));
+  ctx.restore();
 }
 
 function drawCaption(ctx, width, height, text, frame) {
