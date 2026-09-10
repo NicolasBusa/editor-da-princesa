@@ -67,7 +67,7 @@ cd editor-da-princesa
 npm start
 ```
 
-Abra `http://127.0.0.1:4173`. A execução local precisa de um arquivo `.env`; use `.env.example` como modelo e mantenha as credenciais fora do Git. Depois de modificar e testar:
+Abra `http://127.0.0.1:4173` e use a senha **1309**. O `.env` é opcional no desenvolvimento: sem ele, os presets ficam somente em `.runtime/presets.json`. Para usar a coleção real do Supabase localmente, copie `.env.example` para `.env`, preencha as três variáveis do Supabase e mantenha as credenciais fora do Git. Depois de modificar e testar:
 
 ```bash
 git add .
