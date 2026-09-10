@@ -8,4 +8,7 @@ dev/
 references/
 supabase/
 tests/
+.chrome-dazz/
+.chrome-dazz2/
+assets/camera-icons/inst_sqc.jpg
 *.zip
