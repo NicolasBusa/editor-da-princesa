@@ -57,6 +57,35 @@ A versão 4 está preparada para Vercel com a função `api/index.mjs` e `vercel
 
 Em outra hospedagem Node, execute `npm start` com `NODE_ENV=production` e `APP_ORIGIN` igual à origem HTTPS pública. Nesse modo, `HOST` e `PORT` também podem ser definidos pela plataforma.
 
+## Baixar, modificar e atualizar
+
+O código fica no repositório privado [NicolasBusa/editor-da-princesa](https://github.com/NicolasBusa/editor-da-princesa). Para trabalhar com histórico de versões, instale o Git e execute:
+
+```bash
+git clone https://github.com/NicolasBusa/editor-da-princesa.git
+cd editor-da-princesa
+npm start
+```
+
+Abra `http://127.0.0.1:4173`. A execução local precisa de um arquivo `.env`; use `.env.example` como modelo e mantenha as credenciais fora do Git. Depois de modificar e testar:
+
+```bash
+git add .
+git commit -m "Descreva a alteração"
+git push origin main
+```
+
+Para publicar manualmente no projeto existente da Vercel, instale o CLI, entre na mesma conta e vincule a pasta uma vez:
+
+```bash
+npm install --global vercel
+vercel login
+vercel link --project editor-da-princesa
+vercel --prod
+```
+
+As variáveis de produção já estão guardadas no projeto da Vercel. Não envie o `.env` ao GitHub. Para deploy automático, abra Project Settings → Git na Vercel, conecte este repositório e conceda à integração da Vercel acesso ao repositório privado. Depois disso, cada `git push` no branch `main` atualiza a produção; outros branches geram previews.
+
 Para acesso na mesma rede Wi-Fi, defina HOST=0.0.0.0 antes de npm start e abra http://IP-DO-COMPUTADOR:4173 no telefone. Compartilhamento nativo geralmente requer HTTPS e suporte do navegador; o download permanece disponível. O layout é mobile-first, com controles roláveis abaixo da foto. Ainda não houve teste em Safari num iPhone físico.
 
 A cartinha está no elemento love-dialog de index.html. Personalize os textos e a assinatura ali. Os estilos ficam em styles.css e studio.css. Os perfis são módulos JavaScript próprios em cameraProfiles/ para manter o projeto sem compilação; suas tipagens estão em CameraProfile.d.ts.
