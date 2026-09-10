@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,6 +27,27 @@ test('new DAZZ cameras and legacy saved cameras are both valid preset choices', 
   }
 });
 
+test('PWA manifest, photo icons and offline shell form an installable app', async () => {
+  const manifest = JSON.parse(await readFile(path.join(root, 'manifest.webmanifest'), 'utf8'));
+  assert.equal(manifest.name, 'Editor da Princesa');
+  assert.equal(manifest.display, 'standalone');
+  assert.equal(manifest.start_url, '/');
+  assert.equal(manifest.orientation, 'portrait-primary');
+  assert.deepEqual(manifest.icons.map(icon => icon.sizes), ['192x192', '512x512', '512x512']);
+  for (const [filename, size] of [['icon-192.png', 192], ['icon-512.png', 512], ['apple-touch-icon.png', 180]]) {
+    const png = await readFile(path.join(root, 'assets/pwa', filename));
+    assert.equal(png.toString('ascii', 1, 4), 'PNG');
+    assert.equal(png.readUInt32BE(16), size);
+    assert.equal(png.readUInt32BE(20), size);
+  }
+  const [index, login, offline, worker, deployment] = await Promise.all(['index.html', 'login.html', 'offline.html', 'service-worker.js', 'vercel.json'].map(file => readFile(path.join(root, file), 'utf8')));
+  assert(index.includes('/manifest.webmanifest') && login.includes('/manifest.webmanifest'));
+  assert(index.includes('./pwa.js') && login.includes('/pwa.js'));
+  assert(offline.includes('/assets/pwa/icon-192.png'));
+  assert(worker.includes("caches.match('/offline.html')") && worker.includes('SKIP_WAITING'));
+  assert(JSON.parse(deployment).functions['api/index.mjs'].includeFiles.includes('*.webmanifest'));
+});
+
 test('server authentication, protected assets, validation, CRUD, persistence, CSRF and revocation', async t => {
   const directory = await mkdtemp(path.join(tmpdir(), 'princess-test-')), filename = path.join(directory, 'presets.json');
   const server = createApplication({ root, store: localStore(filename) }); await new Promise(r => server.listen(0, '127.0.0.1', r));
@@ -37,6 +58,10 @@ test('server authentication, protected assets, validation, CRUD, persistence, CS
   assert.equal((await call('/')).status, 302);
   for (const url of ['/app.js', '/api/presets', '/processor-worker.js', '/cameraProfiles/index.js']) assert.equal((await call(url)).status, 401);
   const loginHtml = await (await call('/login.html')).text(); assert(!loginHtml.includes('1309'));
+  assert(loginHtml.includes('/manifest.webmanifest'));
+  for (const url of ['/manifest.webmanifest', '/service-worker.js', '/pwa.js', '/pwa.css', '/offline.html', '/assets/pwa/icon-192.png']) assert.equal((await call(url)).status, 200);
+  assert.match((await call('/manifest.webmanifest')).headers.get('content-type'), /application\/manifest\+json/);
+  assert.equal((await call('/service-worker.js')).headers.get('service-worker-allowed'), '/');
   assert.equal((await call('/api/login', 'POST', { password: 'wrong' })).status, 401);
   assert.equal((await call('/api/login', 'POST', { password: '1309' }, { Origin: 'https://evil.example' })).status, 403);
   const login = await call('/api/login', 'POST', { password: '1309' }); assert.equal(login.status, 200);

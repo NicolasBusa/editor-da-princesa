@@ -4,7 +4,7 @@
   "regions": ["gru1"],
   "functions": {
     "api/index.mjs": {
-      "includeFiles": "{*.html,*.css,*.js,assets/**,cameraProfiles/**,filmEngine/**}",
+      "includeFiles": "{*.html,*.css,*.js,*.webmanifest,assets/**,cameraProfiles/**,filmEngine/**}",
       "maxDuration": 20
     }
   },

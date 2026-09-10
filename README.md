@@ -1,4 +1,4 @@
-# Editor da Princesa · versão 5.0
+# Editor da Princesa · versão 5.1
 
 No celular, a foto ocupa a área principal e a barra inferior rola horizontalmente. Toque em uma ferramenta para abrir seus controles; em Ajustes, deslize a segunda barra para acessar Luz, Cor, HSL, Curvas, Gradação, Detalhes, Efeitos e Recorte. Toque novamente na ferramenta ou em **Ver a foto** para recolher o painel. Importação, histórico e exportação ficam no topo; comparação e zoom continuam abaixo da foto.
 
@@ -7,6 +7,14 @@ Adesivos podem ser espelhados pelo botão ↔ do elemento selecionado. A ferrame
 Durante o arraste dos ajustes, a prévia usa uma resolução temporária menor e atualiza continuamente; ao terminar o gesto, refina a resolução. Um worker separado permite responder ao próximo gesto enquanto a prévia completa termina. O motor e os valores dos controles continuam os mesmos; a exportação usa a resolução escolhida. **Revelando** aparece somente ao aplicar uma câmera ou preset salvo.
 
 Onze câmeras do projeto DAZZ Retro Camera foram adaptadas para pós-processamento no editor em amarelo, nuvens e coelhinhos. O processamento acontece no navegador, sem upload das fotos a um servidor. O app também tem entrada pela senha **1309**, coleção de presets conectada ao Supabase e 67 adesivos em sete categorias. Veja [SUPABASE.md](SUPABASE.md) para a configuração da nuvem.
+
+## Aplicativo instalável
+
+O site é um PWA instalável com ícone próprio criado a partir da foto da Isadora. No iPhone, abra o site, toque em **Compartilhar**, escolha **Adicionar à Tela de Início**, ative **Abrir como App** e confirme em **Adicionar**. O botão **Instalar aplicativo** no rodapé também abre esse guia; navegadores que oferecem instalação direta usam o mesmo botão.
+
+O manifesto define o modo independente, orientação vertical, cores e ícones de 192/512 px. O service worker guarda a tela de acesso e os recursos públicos necessários para mostrar uma página offline, além de reaproveitar recursos do editor já carregados. Por segurança, abrir uma nova sessão do editor continua exigindo conexão e autenticação. Quando uma nova versão estiver pronta, o app oferece **Atualizar** sem interromper silenciosamente uma edição aberta.
+
+Para verificar a experiência no navegador, inicie um Chromium de teste com depuração remota na porta 9335 e execute `node tests/browser/pwa-verify.mjs`. O teste simula um iPhone, registra o service worker, abre o guia de instalação, captura `tests/browser/pwa-install-mobile.png` e interrompe a rede para validar a página offline.
 
 ## Abrir
 
