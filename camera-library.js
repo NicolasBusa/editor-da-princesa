@@ -14,7 +14,7 @@ export function mountCameraLibrary(api) {
       const button = document.createElement('button'); button.className = 'filter-card camera-card'; button.dataset.camera = camera.id;
       button.setAttribute('aria-label', `${camera.name}. ${camera.description}`);
       const thumb = document.createElement('span'); thumb.className = 'filter-thumb'; thumb.style.background = `${camera.color}25`;
-      const image = new Image(); image.alt = ''; image.src = cache.get(camera.id) || './assets/demo.svg'; thumb.append(image);
+      const image = new Image(); image.alt = ''; image.src = cache.get(camera.id) || camera.thumbnail || './assets/demo.svg'; thumb.append(image);
       const name = document.createElement('span'); name.className = 'filter-name'; name.textContent = camera.name;
       const label = document.createElement('span'); label.className = 'filter-family-label'; label.textContent = camera.format.label;
       button.append(thumb, name, label);
@@ -67,7 +67,7 @@ export function mountCameraLibrary(api) {
     $('#current-camera-name').textContent = camera.name; $('#current-camera-description').textContent = camera.description; $('#camera-format').textContent = label(camera);
     $('#camera-texture').value = state.cameraTexture; $('#camera-texture').style.setProperty('--range-fill', `${state.cameraTexture}%`); $('#camera-texture-value').textContent = `${state.cameraTexture}%`;
     $('#camera-grain').checked = state.cameraOptions.grain; $('#camera-frame').checked = state.cameraOptions.frame; $('#camera-leaks').checked = state.cameraOptions.lightLeaks;
-    $('#camera-frame-label').hidden = !camera.format.print; $('#camera-leaks-label').hidden = camera.id !== 'dream120';
+    $('#camera-frame-label').hidden = !camera.format.print; $('#camera-leaks-label').hidden = !camera.imperfections.leakProbability;
     $('#flash-controls').hidden = !camera.flash; $('#flash-enabled').checked = state.flash.enabled; $('#flash-settings').hidden = !state.flash.enabled;
     for (const c of controls) { c.input.value = state.flash[c.key] * c.factor; c.output.value = `${Number(c.input.value).toFixed(c.key === 'distance' ? 1 : 0)}${c.unit}`; c.input.style.setProperty('--range-fill', `${(Number(c.input.value)-Number(c.input.min))/(Number(c.input.max)-Number(c.input.min))*100}%`); }
   }

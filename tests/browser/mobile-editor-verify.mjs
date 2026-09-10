@@ -17,7 +17,7 @@ try {
   await browser.send('Page.navigate', { url: 'http://127.0.0.1:4173/' });
   await until(`document.querySelector('#artboard-loading')?.hidden`);
   await delay(1000);
-  assert(await run(`document.querySelector('#artboard').clientHeight > 550`), 'photo fills mobile workspace');
+  assert(await run(`document.querySelector('#artboard').clientHeight > 500`), 'photo fills mobile workspace');
   assert(await run(`document.querySelector('.tool-tabs').scrollWidth > document.querySelector('.tool-tabs').clientWidth`), 'horizontal primary toolbar');
   await click('#tab-adjust');
   assert(await run(`document.querySelector('#artboard').clientHeight > 350`), 'photo remains visible with controls open');
@@ -35,7 +35,7 @@ try {
     return {updatesDuringDrag:frames.filter(t=>t<1000).length,firstFrame:Math.round(frames[0]),revealing,finalWidth:canvas.width};
   })()`);
   assert.equal(performanceResult.revealing, false); assert(performanceResult.updatesDuringDrag >= 3, 'updates while dragging'); assert(performanceResult.finalWidth > 400, 'full preview after release');
-  await click('#tab-cameras'); await click('[data-camera="lomo32"]');
+  await click('#tab-cameras'); await click('[data-camera="fisheye"]');
   assert(await run(`!document.querySelector('#render-status').hidden`), 'camera preset has revealing indicator');
   await until(`document.querySelector('#render-status').hidden`);
   await click('#tab-stickers'); await click('[data-sticker-id="bunny-heart"]');

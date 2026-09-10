@@ -50,7 +50,7 @@ export function defaultAdjustments() {
 }
 export const defaultComposition = () => ({ rotation: 0, straighten: 0, flipX: false, flipY: false, ratio: 'free', crop: { x: 0, y: 0, width: 1, height: 1 } });
 export function createState() {
-  return { camera: 'classic38', intensity: 100, cameraTexture: 100, cameraOptions: { grain: true, frame: true, lightLeaks: true, lens: true }, flash: { enabled: false, power: 75, distance: 2, x: .5, y: .45 }, adjustments: defaultAdjustments(), composition: defaultComposition(), frame: 'none', stickers: [], caption: '', seed: 41731 };
+  return { camera: 'd_classic', intensity: 100, cameraTexture: 100, cameraOptions: { grain: true, frame: true, lightLeaks: true, lens: true }, flash: { enabled: false, power: 75, distance: 2, x: .5, y: .45 }, adjustments: defaultAdjustments(), composition: defaultComposition(), frame: 'none', stickers: [], caption: '', seed: 41731 };
 }
 export function neutralPhotoState(state, keepComposition = true) {
   return { ...createState(), camera: state.camera, cameraOptions: { ...state.cameraOptions }, intensity: 0, composition: keepComposition ? JSON.parse(JSON.stringify(state.composition || defaultComposition())) : defaultComposition(), seed: state.seed || 41731 };

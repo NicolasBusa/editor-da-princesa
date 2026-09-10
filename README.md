@@ -1,4 +1,4 @@
-# Editor da Princesa · versão 4.1
+# Editor da Princesa · versão 5.0
 
 No celular, a foto ocupa a área principal e a barra inferior rola horizontalmente. Toque em uma ferramenta para abrir seus controles; em Ajustes, deslize a segunda barra para acessar Luz, Cor, HSL, Curvas, Gradação, Detalhes, Efeitos e Recorte. Toque novamente na ferramenta ou em **Ver a foto** para recolher o painel. Importação, histórico e exportação ficam no topo; comparação e zoom continuam abaixo da foto.
 
@@ -6,7 +6,7 @@ Adesivos podem ser espelhados pelo botão ↔ do elemento selecionado. A ferrame
 
 Durante o arraste dos ajustes, a prévia usa uma resolução temporária menor e atualiza continuamente; ao terminar o gesto, refina a resolução. Um worker separado permite responder ao próximo gesto enquanto a prévia completa termina. O motor e os valores dos controles continuam os mesmos; a exportação usa a resolução escolhida. **Revelando** aparece somente ao aplicar uma câmera ou preset salvo.
 
-Cinco câmeras com renderização própria num editor de fotos em amarelo, nuvens e coelhinhos. O processamento acontece no navegador, sem upload das fotos a um servidor. Agora com entrada pela senha **1309**, coleção de presets conectada ao Supabase e 67 adesivos em sete categorias. Veja [SUPABASE.md](SUPABASE.md) para a configuração da nuvem.
+Onze câmeras do projeto DAZZ Retro Camera foram adaptadas para pós-processamento no editor em amarelo, nuvens e coelhinhos. O processamento acontece no navegador, sem upload das fotos a um servidor. O app também tem entrada pela senha **1309**, coleção de presets conectada ao Supabase e 67 adesivos em sete categorias. Veja [SUPABASE.md](SUPABASE.md) para a configuração da nuvem.
 
 ## Abrir
 
@@ -15,21 +15,25 @@ Requer Node.js 22 ou superior, sem dependências de instalação:
 
 Execute **npm start** e abra [o editor](http://127.0.0.1:4173/). Use HTTP, não abra index.html diretamente pelo explorador de arquivos. Para os testes, execute **npm test**.
 
-## As cinco câmeras
+## As onze câmeras
 
 | Câmera | Resposta principal | Formato |
 | --- | --- | --- |
-| CLASSIC 38 | Pele natural, ombro progressivo nos realces, lente discreta, grão fino | 3:2 / 2:3 |
-| FLASH 800 | Flash frontal opcional com distância/posição, grão maior, ótica simples | 3:2 / 2:3 |
-| LOMO 32 | Saturação por matiz e luminância, contraste, queda óptica e variação de exposição | 3:2 / 2:3 |
-| DREAM 120 | Suavidade radial, centro utilizável, grão fino, vazamentos em 12% das seeds | 1:1 |
-| INSTANT 160 | Tons e química instantâneos, resposta a pouca luz, borda externa opcional | Imagem 77:79; folha 88:107 |
+| B&W CLASSIC | Mistura monocromática, contraste firme e grão forte | 3:2 / 2:3 |
+| CCD R | Sombras frias, ruído digital e aberração cromática | 4:3 / 3:4 |
+| CPM35 | Negativo quente, dourados suaves e pele protegida | 3:2 / 2:3 |
+| D CLASSIC | Digital equilibrado, limpo e definido | 4:3 / 3:4 |
+| FISHEYE | Olho de peixe, vinheta forte e formato quadrado | 1:1 |
+| FQS | Filme Fuji frio com verdes e cianos suaves | 3:2 / 2:3 |
+| FXN-R | Negativo frio, sombras ciano e boa definição | 3:2 / 2:3 |
+| GRD R | Compacta de rua, baixa saturação e nitidez alta | 4:3 / 3:4 |
+| INST C | Papel instantâneo quente com imagem 3:4 | Instantâneo 3:4 |
+| INST SQC | Papel instantâneo quente e imagem quadrada | Instantâneo 1:1 |
+| U300 | Filme quente, dourados vivos e grão fino | 3:2 / 2:3 |
 
-Esses são os únicos cinco perfis principais. A seção Câmeras substitui a antiga biblioteca de 24 filtros. Não há uma sexta câmera Original: use Antes/depois ou Presença da câmera em zero para conferir a imagem sem o tratamento, mantendo o formato e seus ajustes manuais.
+Esses são os onze perfis principais exibidos na galeria. Use Antes/depois ou Presença da câmera em zero para conferir a imagem sem tratamento, mantendo o formato e os ajustes manuais. As cinco câmeras da versão anterior continuam reconhecidas internamente para que presets antigos permaneçam utilizáveis.
 
-Presença mistura a contribuição fotográfica completa. Textura controla grão, microtextura química e vazamentos ocasionais; a lente e a cor permanecem independentes. Também há chaves para grão, borda instantânea e vazamentos do DREAM. Nova captura troca a seed: brilho, recorte e outros ajustes não sorteiam uma textura nova. Importar uma foto também cria uma seed nova; desfazer restaura a seed anterior. Os corações guardam câmeras favoritas no navegador.
-
-O FLASH 800 oferece liga/desliga, potência, distância aproximada de 1,2 a 3,5 m e posição horizontal/vertical do assunto. Sem profundidade da cena, a iluminação é uma aproximação espacial ajustável. As outras quatro câmeras ignoram o flash.
+Presença mistura a contribuição fotográfica completa. Textura controla grão, microtextura química e vazamentos; lente, tom e cor permanecem independentes. Nova captura troca a seed: brilho, recorte e outros ajustes não sorteiam uma textura nova. Importar uma foto também cria uma seed nova; desfazer restaura a seed anterior. Os corações guardam câmeras favoritas no navegador.
 
 ## Edição, composição e exportação
 
@@ -45,9 +49,9 @@ O zoom 100% mapeia um pixel da composição para um pixel CSS. Prévia e exporta
 
 ## Comparação e referências
 
-Com o servidor em desenvolvimento, abra [/dev/profile-comparison](http://127.0.0.1:4173/dev/profile-comparison). A página revela a mesma fotografia nas cinco câmeras, permite trocar a seed e desligar grão, borda e vazamentos juntos. O download é da prévia de comparação (até 640 px); use o editor para exportação em resolução maior.
+Com o servidor em desenvolvimento, abra [/dev/profile-comparison](http://127.0.0.1:4173/dev/profile-comparison). A página revela a mesma fotografia nas onze câmeras, permite trocar a seed e desligar grão, borda e vazamentos juntos. O download é da prévia de comparação (até 640 px); use o editor para exportação em resolução maior.
 
-As pastas references/classic38, flash800, lomo32, dream120 e instant160 têm manifestos prontos para fotografias licenciadas. Estão vazias de fotos reais. A [documentação de referências](references/README.md) descreve os campos e as fontes técnicas. A calibração com fotografias reais está pendente; os nomes genéricos são aproximações estéticas/ópticas, não reprodução medida das câmeras físicas citadas na especificação.
+As definições foram transportadas do DAZZ para o motor paramétrico do navegador, sem depender de captura ao vivo ou LUT em tempo de execução. A procedência e a licença MIT estão registradas em [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Veja [VALIDACAO.md](VALIDACAO.md) para testes e limitações e [filmEngine/README.md](filmEngine/README.md) para a arquitetura.
 

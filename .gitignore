@@ -5,3 +5,8 @@
 supabase/.temp/
 node_modules/
 .vercel/
+assets/camera-icons/inst_sqc.jpg
+.chrome-dazz/
+.chrome-dazz2/
+tests/browser/dazz-camera-strip-mobile.png
+tests/browser/dazz-cameras-mobile.png

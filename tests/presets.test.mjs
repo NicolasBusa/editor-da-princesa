@@ -20,6 +20,13 @@ test('recipe preserves all controls, excludes photo-specific content, supports o
   const broken = capturePreset(state, true); broken.composition.crop.width = 3; assert.throws(() => validateRecipe(broken));
 });
 
+test('new DAZZ cameras and legacy saved cameras are both valid preset choices', () => {
+  for (const camera of ['bw_classic', 'ccd_r', 'cpm35', 'd_classic', 'fisheye', 'fqs', 'fxn_r', 'grd_r', 'inst_c', 'inst_sqc', 'u300', 'classic38']) {
+    const state = createState(); state.camera = camera;
+    assert.equal(capturePreset(state).camera, camera);
+  }
+});
+
 test('server authentication, protected assets, validation, CRUD, persistence, CSRF and revocation', async t => {
   const directory = await mkdtemp(path.join(tmpdir(), 'princess-test-')), filename = path.join(directory, 'presets.json');
   const server = createApplication({ root, store: localStore(filename) }); await new Promise(r => server.listen(0, '127.0.0.1', r));

@@ -136,7 +136,7 @@ async function paint() {
   $('#render-status').hidden = !reveal;
   try {
     await renderEditor(temp, source, snapshot, assets, { ...(studio?.renderOptions() || {}), ...(interactive ? { maxEdge: 260, maxPixels: 67600, kind: 'interactive' } : {}) });
-    if (source === photo && (revision === renderRevision || (interactive && snapshot.camera === state.camera && snapshot.frame === state.frame && JSON.stringify(snapshot.stickers) === JSON.stringify(state.stickers) && JSON.stringify(snapshot.composition) === JSON.stringify(state.composition)))) {
+    if (source === photo && (revision === renderRevision || (interactive && revision >= lastFullRevision && snapshot.camera === state.camera && snapshot.frame === state.frame && JSON.stringify(snapshot.stickers) === JSON.stringify(state.stickers) && JSON.stringify(snapshot.composition) === JSON.stringify(state.composition)))) {
       canvas.width = temp.width; canvas.height = temp.height;
       canvas.getContext('2d').drawImage(temp, 0, 0);
       syncStickerLayer();

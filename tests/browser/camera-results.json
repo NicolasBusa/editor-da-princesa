@@ -1,6 +1,6 @@
 [
   {
-    "name": "Exactly five camera cards and no legacy filter tab",
+    "name": "Exactly eleven DAZZ camera cards and no legacy filter tab",
     "passed": true,
     "details": ""
   },
@@ -30,26 +30,6 @@
     "details": ""
   },
   {
-    "name": "Flash distance changes preview",
-    "passed": true,
-    "details": ""
-  },
-  {
-    "name": "Flash center changes preview",
-    "passed": true,
-    "details": ""
-  },
-  {
-    "name": "Flash position participates in history",
-    "passed": true,
-    "details": ""
-  },
-  {
-    "name": "Flash redo restores position",
-    "passed": true,
-    "details": ""
-  },
-  {
     "name": "New capture changes seeded appearance",
     "passed": true,
     "details": ""
@@ -60,52 +40,82 @@
     "details": ""
   },
   {
-    "name": "Grain checkbox changes pixels while preserving camera colors",
+    "name": "Grain checkbox changes pixels while preserving camera tone",
     "passed": true,
     "details": ""
   },
   {
-    "name": "classic38 PNG export exactly matches preview",
+    "name": "bw_classic PNG export exactly matches preview",
     "passed": true,
-    "details": "{\"hash\":4245992360,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+    "details": "{\"hash\":4224328429,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
   },
   {
-    "name": "flash800 PNG export exactly matches preview",
+    "name": "ccd_r PNG export exactly matches preview",
     "passed": true,
-    "details": "{\"hash\":1217410999,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+    "details": "{\"hash\":4256680660,\"width\":533,\"height\":400,\"mime\":\"image/png\"}"
   },
   {
-    "name": "lomo32 PNG export exactly matches preview",
+    "name": "cpm35 PNG export exactly matches preview",
     "passed": true,
-    "details": "{\"hash\":1452105743,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+    "details": "{\"hash\":926604970,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
   },
   {
-    "name": "DREAM renders square in editor",
+    "name": "d_classic PNG export exactly matches preview",
     "passed": true,
-    "details": ""
+    "details": "{\"hash\":1290508365,\"width\":533,\"height\":400,\"mime\":\"image/png\"}"
   },
   {
-    "name": "dream120 PNG export exactly matches preview",
-    "passed": true,
-    "details": "{\"hash\":2049485099,\"width\":400,\"height\":400,\"mime\":\"image/png\"}"
-  },
-  {
-    "name": "INSTANT renders physical print aspect",
+    "name": "FISHEYE renders square in editor",
     "passed": true,
     "details": ""
   },
   {
-    "name": "INSTANT retains own response without border",
+    "name": "fisheye PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":3208232783,\"width\":400,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "fqs PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":1225724371,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "fxn_r PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":2464899786,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "grd_r PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":2828190685,\"width\":533,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "inst_c PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":3951904031,\"width\":343,\"height\":460,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "INST SQC renders physical print aspect",
     "passed": true,
     "details": ""
   },
   {
-    "name": "instant160 PNG export exactly matches preview",
+    "name": "INST SQC retains square response without border",
     "passed": true,
-    "details": "{\"hash\":277042123,\"width\":446,\"height\":542,\"mime\":\"image/png\"}"
+    "details": ""
   },
   {
-    "name": "Five cameras produce five distinct editor results",
+    "name": "inst_sqc PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":1512722827,\"width\":457,\"height\":556,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "u300 PNG export exactly matches preview",
+    "passed": true,
+    "details": "{\"hash\":3783867402,\"width\":600,\"height\":400,\"mime\":\"image/png\"}"
+  },
+  {
+    "name": "Eleven cameras produce eleven distinct editor results",
     "passed": true,
     "details": ""
   },
@@ -152,7 +162,7 @@
   {
     "name": "Crop, rotation, alignment, camera, sticker and decorative frame export identically",
     "passed": true,
-    "details": "{\"hash\":1492185247,\"width\":260,\"height\":260,\"mime\":\"image/png\"}"
+    "details": "{\"hash\":3727477465,\"width\":260,\"height\":260,\"mime\":\"image/png\"}"
   },
   {
     "name": "PNG is downloaded as a real file",
@@ -210,7 +220,7 @@
     "details": ""
   },
   {
-    "name": "Development comparison renders all five engines",
+    "name": "Development comparison renders all eleven engines",
     "passed": true,
     "details": ""
   },

@@ -1,6 +1,7 @@
 import { createState, GROUPS, HSL_BANDS } from './model.js';
+import { CAMERA_BY_ID } from './cameraProfiles/index.js';
 
-const cameras = ['classic38', 'flash800', 'lomo32', 'dream120', 'instant160'];
+const cameras = [...CAMERA_BY_ID.keys()];
 const fail = () => { throw new Error('As configurações deste preset são inválidas ou incompatíveis.'); };
 const number = (v, min, max) => typeof v === 'number' && Number.isFinite(v) && v >= min && v <= max ? v : fail();
 const boolean = v => typeof v === 'boolean' ? v : fail();

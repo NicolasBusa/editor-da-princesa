@@ -20,13 +20,13 @@ try {
   await until(`Boolean(document.querySelector('#preset-save'))`); await settle();
   await until(`document.querySelector('#preset-storage').textContent.includes('Supabase')`);
   console.log('PASS mobile gate, wrong password, login and Supabase storage status');
-  await click('[data-camera="dream120"]'); await set('#intensity', '68'); await set('#camera-texture', '32');
+  await click('[data-camera="inst_sqc"]'); await set('#intensity', '68'); await set('#camera-texture', '32');
   await click('#tab-adjust'); await set('#control-adjustments-light-exposure', '.75');
   await click('#tab-cameras'); await settle(); const desired = await hash();
   await click('#preset-save'); await run(`document.querySelector('#preset-name').value='Teste navegador nuvem';document.querySelector('#preset-form').requestSubmit()`);
   await until(`!document.querySelector('#preset-form').closest('dialog').open && document.querySelectorAll('.preset-card').length>0`);
   const first = await run(`Array.from(document.querySelectorAll('.preset-card')).find(e=>e.textContent.includes('Teste navegador nuvem')).dataset.presetId`); ids.push(first);
-  await click('[data-camera="flash800"]'); await set('#intensity', '95');
+  await click('[data-camera="ccd_r"]'); await set('#intensity', '95');
   const before = await hash(); assert.notEqual(before, desired);
   await click(`[data-preset-id="${first}"] .preset-apply`); await settle(); assert.equal(await hash(), desired);
   await click('#undo-button'); await settle(); assert.equal(await hash(), before);

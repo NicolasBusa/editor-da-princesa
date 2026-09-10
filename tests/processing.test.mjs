@@ -22,7 +22,7 @@ const process = state => processPixels(new Uint8ClampedArray(pixels), width, hei
 const hash = data => createHash('sha256').update(data).digest('hex');
 const originalHash = hash(pixels);
 const different = state => assert.notEqual(hash(process(state)), originalHash);
-test('Exactly five named camera profiles', () => { assert.equal(CAMERA_PROFILES.length,5); assert.equal(new Set(CAMERA_PROFILES.map(p=>p.id)).size,5); });
+test('Exactly eleven named DAZZ camera profiles', () => { assert.equal(CAMERA_PROFILES.length,11); assert.equal(new Set(CAMERA_PROFILES.map(p=>p.id)).size,11); });
 test('Neutral adjustments at zero camera strength preserve every byte', () => assert.deepEqual(process(createState()), pixels));
 for (const camera of CAMERA_PROFILES) test(camera.name + ': zero strength keeps manual edits', () => {
   const a = createState(); a.adjustments.light.exposure = .35; a.adjustments.color.temperature = 12; a.adjustments.analog.grain = 24; a.adjustments.analog.dust = 30;
